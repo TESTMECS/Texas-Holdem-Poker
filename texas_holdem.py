@@ -1,4 +1,4 @@
-from cards import deck
+from cards import deck, StandardDeck
 from button import Button
 from players import Player
 from Poker import Poker
@@ -256,8 +256,7 @@ def game_screen(Player1, Player2, Player3, Dealerr):
    draw_bg(bg_image)
    font_obj = pygame.font.Font('freesansbold.ttf', 32)
    hand = True
-   pot=0
-   betting = False
+
    option = False
    #show controls
    show_controls()
@@ -479,12 +478,30 @@ def game_screen(Player1, Player2, Player3, Dealerr):
           print("You won!")
         print("Your Chips:")
         print(Player1.chips)
+      
       clock.tick(60)
       hand = False
+
+
+
+def play_again():
+   screen.fill((0,0,0))
+   font_obj = pygame.font.Font('freesansbold.ttf', 16)
+   PLAYAGAIN_BUTTON = Button(image=None, pos=(500, 500), text_input="play again", font=font_obj, base_color="#d7fcd4", hovering_color="Blue", press=False)
+   PLAYAGAIN_BUTTON.update(screen)
+   events = pygame.event.get()
+   for event in events:
+    if PLAYAGAIN_BUTTON.checkForInput(pygame.mouse.get_pos()) and event.type == pygame.MOUSEBUTTONDOWN:
+       return True
+    if event.type == pygame.QUIT:
+       return False
+      
+   
 
 run_game = True
 
 def main_loop():
+  global deck 
   name_text = []
   chip_init = 1000
 
@@ -496,20 +513,28 @@ def main_loop():
   Player2 = Player("Player2", chip_init, "SB")
   Player3 = Player("Player3", chip_init, "BB")
   Dealer = Player("Dealer", 0, "DD")
-  game_screen(Player1, Player2, Player3, Dealer)
-  
 
-
+  bool = True
+  while bool:
+    game_screen(Player1, Player2, Player3, Dealer)
+    Dealer.chips = 0
+    Player1.cards = []
+    Player2.cards = []
+    Player3.cards = []
+    Dealer.cards = []
+    
+    deck = StandardDeck()
+    deck.shuffle()
+    
   
   
   
-  
-  for event in pygame.event.get():  
-    if event.type == pygame.QUIT:
-      pygame.quit()
-      sys.exit()
+    for event in pygame.event.get():  
+      if event.type == pygame.QUIT:
+        pygame.quit()
+        sys.exit()
       
-  pygame.display.update()
+    pygame.display.update()
 
 
       
